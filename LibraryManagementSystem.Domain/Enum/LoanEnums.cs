@@ -13,9 +13,10 @@ namespace LibraryManagementSystem.Domain.Enum
         /// </summary>
         public enum LoanStatus
         {
-            Pending = 1,
+            Pending = 0,
+            Approved = 1,
             Returned = 2,
-            Overdue = 3
+            Late = 3
         }
     }
 }

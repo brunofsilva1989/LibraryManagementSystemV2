@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Application.DTOs
 {
-    public class UserDto
+    public class UsersDto
     {
        public string CPF { get; set; }
         public string Name { get; set; }

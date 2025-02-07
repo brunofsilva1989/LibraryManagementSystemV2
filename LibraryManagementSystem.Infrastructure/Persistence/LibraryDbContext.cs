@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Infrastructure.Persistence
 {
-    internal class LibraryDbContext
+    public class LibraryDbContext
     {
+        private string connectionString = "Server=DEVBRUNO;Database=LibraryDB;User Id=sa;Password=Bru@1989;TrustServerCertificate=True";
+
+        public string ConnectionString { get => connectionString; set => connectionString = value; }
     }
 }

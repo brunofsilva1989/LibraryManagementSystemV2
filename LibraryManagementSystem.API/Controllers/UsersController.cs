@@ -4,7 +4,7 @@ namespace LibraryManagementSystem.API.Controllers
 {
     [ApiController]
     [Route("api/user")]
-    public class UserController : Controller
+    public class UsersController : Controller
     {
         /// <summary>
         /// Método para buscar todos os usuários.

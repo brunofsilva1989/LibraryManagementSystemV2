@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using LibraryManagementSystem.Domain.Interfaces;
+using LibraryManagementSystem.Domain.Model;
 
 namespace LibraryManagementSystem.API.Controllers
 {
@@ -7,6 +9,13 @@ namespace LibraryManagementSystem.API.Controllers
     public class BookController : ControllerBase
     {
         
+        private readonly IBookService _bookService;
+
+        public BookController(IBookService bookService)
+        {
+            _bookService = bookService;
+        }
+
         /// <summary>
         /// Esté método busca todos os livros cadastrados no banco.
         /// </summary>
@@ -14,7 +23,14 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet]        
         public IActionResult Get()
         {
-            return Ok();
+            var books = _bookService.GetBooks();
+
+            if (books == null) 
+            {
+                return NotFound();
+            }
+
+            return Ok(books);
         }
 
         /// <summary>
@@ -33,9 +49,16 @@ namespace LibraryManagementSystem.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult CreateBook()
+        public IActionResult CreateBook(BookModel model)
         {
-            return BadRequest();
+            _bookService.CreateBook(model);
+
+            if (model != null) 
+            {
+                return BadRequest();
+            }
+           
+            return Ok(model);
         }
 
         /// <summary>

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LibraryManagementSystem.Application.Interfaces
+namespace LibraryManagementSystem.Infrastructure.Repositories
 {
-    internal interface IUserService
+    internal class UsersRepository
     {
     }
 }

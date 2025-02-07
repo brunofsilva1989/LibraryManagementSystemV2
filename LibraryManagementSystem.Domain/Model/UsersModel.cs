@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Domain.Model
 {
-    public class UserModel
+    public class UsersModel
     {
-        public UserModel(int id, string cpf, string name, string email)
+        public UsersModel(int id, string cpf, string name, string email)
         {
             Id = GenerateId();
             CPF = cpf;
@@ -16,7 +16,7 @@ namespace LibraryManagementSystem.Domain.Model
             Email = email;
         }
 
-        public UserModel()
+        public UsersModel()
         {
             
         }
@@ -24,8 +24,7 @@ namespace LibraryManagementSystem.Domain.Model
         public int Id { get; private set; }
         public string CPF { get; set; }
         public string Name { get; set; }
-        public string Email { get; set; }
-        public string Role { get; set; }
+        public string Email { get; set; }        
 
         public int GenerateId()
         {
