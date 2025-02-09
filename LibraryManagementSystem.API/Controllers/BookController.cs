@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using LibraryManagementSystem.Domain.Interfaces;
 using LibraryManagementSystem.Domain.Model;
+using LibraryManagementSystem.Application.DTOs;
 
 namespace LibraryManagementSystem.API.Controllers
 {
@@ -49,16 +50,24 @@ namespace LibraryManagementSystem.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult CreateBook(BookModel model)
+        public IActionResult CreateBook(BookDto modelDto)
         {
-            _bookService.CreateBook(model);
+            var bookModel = new BookModel
+            {
+                Title = modelDto.Title,
+                Author = modelDto.Author,
+                ISBN = modelDto.ISBN,
+                YearPublication = modelDto.YearPublication
+            };
 
-            if (model != null) 
+            _bookService.CreateBook(bookModel);
+
+            if (modelDto != null) 
             {
                 return BadRequest();
             }
            
-            return Ok(model);
+            return Ok(modelDto);
         }
 
         /// <summary>

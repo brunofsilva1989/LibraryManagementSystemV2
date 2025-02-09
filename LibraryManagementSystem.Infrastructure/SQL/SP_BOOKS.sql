@@ -1,6 +1,6 @@
 ﻿/*--------------------------------------------------------------------------------------------        
 Tipo Objeto				: Stored Procedure        
-Objeto					: SP_GETALL_BOOKS 
+Objeto					: SP_BOOKS 
 Objetivo				: Buscar todos os Livros no banco de dados
 Projeto					: Administração de banco de Dados         
 Empresa Responsável		: BFS Treinamentos
@@ -22,15 +22,14 @@ Autor                  IDBug Data       Descrição
 ---------------------- ----- ---------- ------------------------------------------------------------
 Bruno Silva			   00000 07/02/2025 Criação da procedure
 */
-CREATE PROCEDURE SP_GETALL_BOOKS
+ALTER PROCEDURE SP_BOOKS
 
 AS
 BEGIN
 	-- CONFIGURE O MODO DE RETORNO DE ERRO
 	SET NOCOUNT ON;
 
-	SELECT * 
-	FROM BOOK 
-	WITH(NOLOCK)
+	SELECT Id, Title, Author, ISBN, YearPublication 
+	FROM BOOK WITH(NOLOCK)
 
 END;

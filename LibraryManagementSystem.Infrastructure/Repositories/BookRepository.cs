@@ -3,6 +3,7 @@ using LibraryManagementSystem.Infrastructure.Persistence;
 using LibraryManagementSystem.Domain.Interfaces;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Runtime.CompilerServices;
 
 namespace LibraryManagementSystem.Infrastructure.Repositories
 {
@@ -10,29 +11,31 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
     {
         #region Propriedades Privadas
         private readonly LibraryDbContext _connectionString;
+        private readonly BookModel _model;
         #endregion
 
-        public BookRepository(LibraryDbContext connectionString)
+        public BookRepository(LibraryDbContext connectionString, BookModel model)
         {
             _connectionString = connectionString;
+            _model = model;
         }
 
         #region CONSTANTES
-        const string GET_BOOKS = "SP_GETALL_BOOKS";
-        const string CREATE_BOOK = "SP_CREATE_BOOK";
+        const string GET_BOOKS = "SP_BOOKS";
+        const string CREATE_BOOK = "SP_CREATE_BOOKS";
         #endregion
        
-        public void UpdateBook()
+        public int UpdateBook(BookModel id)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteBook()
+        public int DeleteBook(BookModel id)
         {
             throw new NotImplementedException();
         }
 
-        public void GetById()
+        public int GetById(int id)
         {
             throw new NotImplementedException();
         }
@@ -41,7 +44,7 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
         {
             var books = new List<BookModel>();
 
-            //criar o acesso ADO.NET a procedure SP_GETALL_BOOKS
+            //criar o acesso ADO.NET a procedure SP_BOOKS
             using (SqlConnection connection = new SqlConnection(_connectionString.ConnectionString))
             {
                 connection.Open();
@@ -52,20 +55,21 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
                     {
                         while (reader.Read())
                         {
-                           books.Add(new BookModel
-                           {
-                               Id = reader.GetInt32(0),
-                               Title = reader.GetString(1),
-                               Author = reader.GetString(2),
-                               ISBN = reader.GetString(3),
-                               YearPublication = reader.GetInt32(4)
-                           });
+                            var book = new BookModel
+                            {
+                                Id = Convert.ToInt32(reader["Id"]),
+                                Title = reader["Title"].ToString(),
+                                Author = reader["Author"].ToString(),
+                                ISBN = reader["ISBN"].ToString(),
+                                YearPublication = Convert.ToInt32(reader["YearPublication"])
+                            };
+                            books.Add(book);
                         }
                     }
                 }
             }
 
-            return null;
+            return books;
         }
 
         public void CreateBook(BookModel model)
