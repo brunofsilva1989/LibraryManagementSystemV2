@@ -1,6 +1,6 @@
 ﻿/*--------------------------------------------------------------------------------------------        
 Tipo Objeto				: Stored Procedure        
-Objeto					: SP_BOOKS 
+Objeto					: SP_GET_BOOKS 
 Objetivo				: Buscar todos os Livros no banco de dados
 Projeto					: Administração de banco de Dados         
 Empresa Responsável		: BFS Treinamentos
@@ -22,7 +22,7 @@ Autor                  IDBug Data       Descrição
 ---------------------- ----- ---------- ------------------------------------------------------------
 Bruno Silva			   00000 07/02/2025 Criação da procedure
 */
-ALTER PROCEDURE SP_BOOKS
+CREATE PROCEDURE SP_GET_BOOKS
 
 AS
 BEGIN

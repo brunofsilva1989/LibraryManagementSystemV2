@@ -1,18 +1,13 @@
 ﻿using LibraryManagementSystem.Domain.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Domain.Interfaces
 {
     public interface IBookService
     {
         public void CreateBook(BookModel model);
-        public void UpdateBook();
-        public void DeleteBook();
-        public void GetById();
+        public void UpdateBook(int id);
+        public void DeleteBook(int id);
+        public BookModel GetById(int id);
         IEnumerable<BookModel> GetBooks();
     }
 }
