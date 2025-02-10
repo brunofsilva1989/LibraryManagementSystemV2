@@ -82,6 +82,11 @@ namespace LibraryManagementSystem.Application.Services
             throw new NotImplementedException();
         }
 
+        void IBookService.DeleteBook(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         void IBookService.GetById(int id)
         {
             throw new NotImplementedException();

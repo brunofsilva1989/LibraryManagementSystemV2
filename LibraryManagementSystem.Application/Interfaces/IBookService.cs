@@ -10,9 +10,9 @@ namespace LibraryManagementSystem.Application.Interfaces
     public interface IBookService
     {
         public void CreateBook(BookDto bookDto);
-        public void UpdateBook(BookDto bookDto);
-        public void DeleteBook(int id);
-        public void GetById(int id);
+        public int UpdateBook(BookDto bookDto);
+        public int DeleteBook(int id);
+        public int GetById(int id);
         IEnumerable<BookDto> GetBooks();
     }
 }

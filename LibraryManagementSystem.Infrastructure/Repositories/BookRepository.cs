@@ -91,5 +91,20 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
                 }
             }            
         }
+
+        public void UpdateBook()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteBook()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetById()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
