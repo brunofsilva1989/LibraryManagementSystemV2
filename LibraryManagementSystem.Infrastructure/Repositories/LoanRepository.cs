@@ -1,5 +1,6 @@
 ﻿using LibraryManagementSystem.Domain.Interfaces;
 using LibraryManagementSystem.Domain.Model;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,9 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
     {
         private readonly string _connectionString;
 
-        public LoanRepository(string connectionString)
+        public LoanRepository(IConfiguration configuration)
         {
-            _connectionString = connectionString;
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
         #region CONSTANTES

@@ -10,18 +10,11 @@ using LibraryManagementSystem.Domain.Model; // Add this using directive
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<IBookRepository, BookRepository>();
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
 builder.Services.AddScoped<GetBookUseCase>();
-builder.Services.AddScoped<IBookRepository>(provider => new BookRepository(connectionString));
-//builder.Services.AddScoped<IBookService, BookService>();
-
-builder.Services.AddScoped<BookModel>();
-
-
-builder.Services.AddScoped<IBookRepository, BookRepository>();  
+builder.Services.AddScoped<BookRepository>();
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<BookModel>(); 
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

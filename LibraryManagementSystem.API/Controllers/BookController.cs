@@ -27,20 +27,15 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet]        
         public IActionResult Get()
         {
-            //var books = _bookService.GetBooks();
-
-            //if (books == null) 
-            //{
-            //    return NotFound();
-            //}
-
-            //return Ok(books);
-
             var books = _getBookUseCase.GetBooks();
+
+            if (books == null)
+            {
+                return NotFound();
+            }
+
             return Ok(books);
         }
-
-
 
         /// <summary>
         /// Esté método busca o livro com base no id passado como parâmetro
@@ -50,7 +45,13 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            return Ok(id);
+            //trazer o livro pelo id
+            var book = _getBookUseCase.GetById(id);
+            if (book == null) {
+                return NotFound();                    
+            }
+
+            return Ok(book);
         }
 
         /// <summary>
@@ -68,7 +69,7 @@ namespace LibraryManagementSystem.API.Controllers
                 YearPublication = modelDto.YearPublication
             };
 
-            _bookService.CreateBook(bookModel);
+            _getBookUseCase.CreateBook(bookModel);
 
             if (modelDto != null) 
             {
@@ -86,7 +87,16 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpPut]
         public IActionResult UpdateBook(int id) 
         {
-            return Ok(id);
+            //trazer os campos do livro para atualizar
+            var book = _getBookUseCase.GetById(id);
+
+            if (book == null) {
+                return NotFound();
+            }
+
+            _getBookUseCase.UpdateBook(book);
+
+            return Ok(book);
         }
 
         /// <summary>
@@ -97,14 +107,14 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpDelete]
         public IActionResult DeleteBook(int id) 
         {
-            var book = _bookService.GetById(id);
+            var book = _getBookUseCase.GetById(id);
 
             if (book == null)
             {
                 return NotFound();
             }
 
-            _bookService.DeleteBook(id);
+            _getBookUseCase.DeleteBook(id);
 
             return NoContent();
         }

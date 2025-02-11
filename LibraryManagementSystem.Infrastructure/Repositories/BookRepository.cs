@@ -3,6 +3,8 @@ using LibraryManagementSystem.Infrastructure.Persistence;
 using LibraryManagementSystem.Domain.Interfaces;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.Extensions.Configuration;
 
 namespace LibraryManagementSystem.Infrastructure.Repositories
 {
@@ -13,9 +15,9 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
         
         #endregion
 
-        public BookRepository(string connectionString)
+        public BookRepository(IConfiguration configuration)
         {
-            _connectionString = connectionString;           
+            _connectionString = configuration.GetConnectionString("DefaultConnection");           
         }
 
         #region CONSTANTES
