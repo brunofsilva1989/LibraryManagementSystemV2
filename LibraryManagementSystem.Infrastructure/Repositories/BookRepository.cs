@@ -6,17 +6,16 @@ using System.Data;
 
 namespace LibraryManagementSystem.Infrastructure.Repositories
 {
-    public class BookRepository : IBookService
+    public class BookRepository : IBookRepository
     {
         #region Propriedades Privadas
-        private readonly LibraryDbContext _connectionString;
-        private readonly BookModel _model;
+        private readonly string _connectionString;
+        
         #endregion
 
-        public BookRepository(LibraryDbContext connectionString, BookModel model)
+        public BookRepository(string connectionString)
         {
-            _connectionString = connectionString;
-            _model = model;
+            _connectionString = connectionString;           
         }
 
         #region CONSTANTES
@@ -33,19 +32,17 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
         /// </summary>
         /// <param name="model"></param>
         public void CreateBook(BookModel model)
-        {
-            var books = new BookModel();
-
-            using (SqlConnection connection = new SqlConnection(_connectionString.ConnectionString))
+        {            
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(CREATE_BOOK, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@Title", books.Title);
-                    command.Parameters.AddWithValue("@Author", books.Author);
-                    command.Parameters.AddWithValue("@ISBN", books.ISBN);
-                    command.Parameters.AddWithValue("@YearPublication", books.YearPublication);
+                    command.Parameters.AddWithValue("@Title", model.Title);
+                    command.Parameters.AddWithValue("@Author", model.Author);
+                    command.Parameters.AddWithValue("@ISBN", model.ISBN);
+                    command.Parameters.AddWithValue("@YearPublication", model.YearPublication);
                     command.ExecuteNonQuery();
                 }
             }
@@ -59,7 +56,7 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
         {
             var books = new List<BookModel>();
             
-            using (SqlConnection connection = new SqlConnection(_connectionString.ConnectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(GET_BOOKS, connection))
@@ -94,7 +91,7 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
         {
             BookModel book = null;
 
-            using (SqlConnection connection = new SqlConnection(_connectionString.ConnectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(GET_BOOK_BY_ID, connection))
@@ -124,11 +121,9 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
         /// Update a book in the database
         /// </summary>
         /// <param name="id"></param>
-        public void UpdateBook(int id)
-        {
-            var book = new BookModel();
-
-            using (SqlConnection connection = new SqlConnection(_connectionString.ConnectionString))
+        public void UpdateBook(BookModel book)
+        {            
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(UPDATE_BOOK, connection))
@@ -151,7 +146,7 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
         public void DeleteBook(int id)
         {            
 
-            using (SqlConnection connection = new SqlConnection(_connectionString.ConnectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(DELETE_BOOK, connection))

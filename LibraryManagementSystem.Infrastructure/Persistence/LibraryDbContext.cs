@@ -13,10 +13,9 @@ namespace LibraryManagementSystem.Infrastructure.Persistence
         {
         }
 
+        private string connectionString = "Server=DEVBRUNO;Database=LibraryDB;User Id=sa;Password=Bru@1989;TrustServerCertificate=True";
 
-        //private string connectionString = "Server=DEVBRUNO;Database=LibraryDB;User Id=sa;Password=Bru@1989;TrustServerCertificate=True";
-
-        private string connectionString = "Server=WIN-RG8N89HJCU7;Database=LibraryDB; User Id=sa; Password=Bru@1989; TrustServerCertificate=True";
+        //private string connectionString = "Server=WIN-RG8N89HJCU7;Database=LibraryDB; User Id=sa; Password=Bru@1989; TrustServerCertificate=True";
         public string ConnectionString { get => connectionString; set => connectionString = value; }
     }
 }

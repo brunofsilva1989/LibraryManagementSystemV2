@@ -1,42 +1,36 @@
 ﻿using LibraryManagementSystem.Application.DTOs;
-using LibraryManagementSystem.Application.Interfaces;
+using LibraryManagementSystem.Domain.Interfaces;
 using LibraryManagementSystem.Domain.Model;
-using LibraryManagementSystem.Infrastructure.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Application.Services
 {
-    public class BookService : IBookService
+    public class GetBookUseCase : IBookRepository
     {
+        private readonly IBookRepository _bookRepository;
 
-        private readonly BookRepository _bookRepository;
-
-        public BookService(BookRepository bookRepository)
+        public GetBookUseCase(IBookRepository bookRepository)
         {
             _bookRepository = bookRepository;
         }
 
-        /// <summary>
-        /// Create a new book
-        /// </summary>
-        /// <param name="bookDto"></param>
-        public void CreateBook(BookDto bookDto)
+        public void CreateBook(BookModel model)
         {
             var book = new BookModel
-            {
-                Title = bookDto.Title,
-                Author = bookDto.Author,
-                ISBN = bookDto.ISBN,
-                YearPublication = bookDto.YearPublication
+            {                
+                Title = model.Title,
+                Author = model.Author,
+                ISBN = model.ISBN,
+                YearPublication = model.YearPublication
             };
 
             _bookRepository.CreateBook(book);
         }
 
-        /// <summary>
-        /// Delete a book
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         public void DeleteBook(int id)
         {
             //delete book
@@ -48,18 +42,14 @@ namespace LibraryManagementSystem.Application.Services
             }
 
             _bookRepository.DeleteBook(book.Id);
-
         }
 
-        /// <summary>
-        /// Get all books
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<BookDto> GetBooks()
+        public IEnumerable<BookModel> GetBooks()
         {
             var books = _bookRepository.GetBooks();
-            return books.Select(book => new BookDto
+            return books.Select(book => new BookModel
             {
+                Id = book.Id,
                 Title = book.Title,
                 Author = book.Author,
                 ISBN = book.ISBN,
@@ -67,12 +57,7 @@ namespace LibraryManagementSystem.Application.Services
             });
         }
 
-        /// <summary>
-        /// Get book by id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public BookDto GetById(int id)
+        public BookModel GetById(int id)
         {
             var book = new BookModel();
 
@@ -83,13 +68,27 @@ namespace LibraryManagementSystem.Application.Services
                 return null;
             }
 
-            return new BookDto
+            return new BookModel
             {
                 Title = book.Title,
                 Author = book.Author,
                 ISBN = book.ISBN,
                 YearPublication = book.YearPublication
             };
+        }
+
+        public void UpdateBook(BookModel book)
+        {
+            //atualizar o livro
+            _bookRepository.UpdateBook(book);
+
+            if (book == null)
+            {
+                throw new Exception("Book not found");
+            }
+
+            _bookRepository.UpdateBook(book);
+
         }
     }
 }

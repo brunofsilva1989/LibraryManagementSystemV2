@@ -4,14 +4,24 @@ using LibraryManagementSystem.Infrastructure.Persistence;
 using LibraryManagementSystem.Infrastructure.Repositories;
 using LibraryManagementSystem.Application.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection; // Add this using directive
+using Microsoft.Extensions.DependencyInjection;
+using LibraryManagementSystem.Domain.Model; // Add this using directive
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<IBookService, BookRepository>();
+builder.Services.AddScoped<IBookRepository, BookRepository>();
 
-//builder.Services.AddDbContext<LibraryDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddScoped<GetBookUseCase>();
+builder.Services.AddScoped<IBookRepository>(provider => new BookRepository(connectionString));
+//builder.Services.AddScoped<IBookService, BookService>();
+
+builder.Services.AddScoped<BookModel>();
+
+
+builder.Services.AddScoped<IBookRepository, BookRepository>();  
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

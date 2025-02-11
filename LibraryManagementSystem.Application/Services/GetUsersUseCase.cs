@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LibraryManagementSystem.Domain.Interfaces
+namespace LibraryManagementSystem.Application.Services
 {
-    internal class IRepository
+    public class GetUsersUseCase
     {
     }
 }

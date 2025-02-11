@@ -2,6 +2,7 @@
 using LibraryManagementSystem.Domain.Interfaces;
 using LibraryManagementSystem.Domain.Model;
 using LibraryManagementSystem.Application.DTOs;
+using LibraryManagementSystem.Application.Services;
 
 namespace LibraryManagementSystem.API.Controllers
 {
@@ -10,11 +11,13 @@ namespace LibraryManagementSystem.API.Controllers
     public class BookController : ControllerBase
     {
         
-        private readonly IBookService _bookService;
+        private readonly IBookRepository _bookService;
+        private readonly GetBookUseCase _getBookUseCase;
 
-        public BookController(IBookService bookService)
+        public BookController(IBookRepository bookService, GetBookUseCase getBookUseCase)
         {
             _bookService = bookService;
+            _getBookUseCase = getBookUseCase;
         }
 
         /// <summary>
@@ -24,15 +27,20 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet]        
         public IActionResult Get()
         {
-            var books = _bookService.GetBooks();
+            //var books = _bookService.GetBooks();
 
-            if (books == null) 
-            {
-                return NotFound();
-            }
+            //if (books == null) 
+            //{
+            //    return NotFound();
+            //}
 
+            //return Ok(books);
+
+            var books = _getBookUseCase.GetBooks();
             return Ok(books);
         }
+
+
 
         /// <summary>
         /// Esté método busca o livro com base no id passado como parâmetro
@@ -64,7 +72,7 @@ namespace LibraryManagementSystem.API.Controllers
 
             if (modelDto != null) 
             {
-                return BadRequest();
+                return Ok("Livro gravado com sucesso!");
             }
            
             return Ok(modelDto);
@@ -89,7 +97,16 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpDelete]
         public IActionResult DeleteBook(int id) 
         {
-            return BadRequest();
+            var book = _bookService.GetById(id);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            _bookService.DeleteBook(id);
+
+            return NoContent();
         }
     }
 }
