@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LibraryManagementSystem.Application.DTOs;
+using LibraryManagementSystem.Application.Services;
+using LibraryManagementSystem.Domain.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagementSystem.API.Controllers
 {
@@ -6,6 +9,15 @@ namespace LibraryManagementSystem.API.Controllers
     [Route("api/user")]
     public class UsersController : Controller
     {
+        
+        private readonly GetUsersUseCase _getUsersUseCase;
+
+        public UsersController(IUserRepository userRepository, GetUsersUseCase getUsersUseCase)
+        {
+            _getUsersUseCase = getUsersUseCase;            
+        }
+
+
         /// <summary>
         /// Método para buscar todos os usuários.
         /// </summary>
@@ -13,7 +25,14 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet]
         public IActionResult GetAllUsers()
         {
-            return NoContent();
+            var users = _getUsersUseCase.GetAllUsers();
+
+            if (users == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(users);
         }
 
         /// <summary>
@@ -23,7 +42,14 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id) 
         {
-            return Ok(id);
+            var user = _getUsersUseCase.GetUserById(id);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+            
+            return Ok(user);
         }
 
         /// <summary>
@@ -31,9 +57,19 @@ namespace LibraryManagementSystem.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult CreateUser() 
+        public IActionResult CreateUser(UsersDto usersDto) 
         {
-            return NoContent();
+            var user = new UsersDto
+            {
+                Name = usersDto.Name,
+                CPF = usersDto.CPF,
+                Email = usersDto.Email,
+                Password = usersDto.Password,
+                CreationDate = usersDto.CreationDate,
+                UpdateDate = usersDto.UpdateDate,
+            };
+
+            return Ok(user);
         }
 
         /// <summary>
@@ -43,7 +79,16 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpPut]
         public IActionResult UpdateUser(int id) 
         {
-            return Ok(id);
+            var user = _getUsersUseCase.GetUserById(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            _getUsersUseCase.UpdateUser(user);
+
+            return Ok(user);
         }
 
         /// <summary>
@@ -53,6 +98,15 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpDelete]
         public IActionResult DeleteUser(int id) 
         {
+            var user = _getUsersUseCase.GetUserById(id);
+
+            if (user == null)
+            {
+                return NotFound("User not found!");
+            }
+
+            _getUsersUseCase.DeleteUser(user.Id);
+
             return Ok(id);
         }
 

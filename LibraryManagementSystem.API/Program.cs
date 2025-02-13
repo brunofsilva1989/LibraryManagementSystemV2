@@ -5,7 +5,8 @@ using LibraryManagementSystem.Infrastructure.Repositories;
 using LibraryManagementSystem.Application.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using LibraryManagementSystem.Domain.Model; // Add this using directive
+using LibraryManagementSystem.Domain.Model;
+using LibraryManagementSystem.Application.Interfaces; // Add this using directive
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,8 @@ builder.Services.AddScoped<GetBookUseCase>();
 builder.Services.AddScoped<BookRepository>();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddScoped<IBookRepository, BookRepository>();
-builder.Services.AddScoped<BookModel>(); 
+builder.Services.AddScoped<BookModel>();
+builder.Services.AddScoped<GetBookUseCase>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

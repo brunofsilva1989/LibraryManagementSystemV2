@@ -1,9 +1,7 @@
 ﻿using LibraryManagementSystem.Domain.Model;
-using LibraryManagementSystem.Infrastructure.Persistence;
 using LibraryManagementSystem.Domain.Interfaces;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using Microsoft.IdentityModel.Protocols;
 using Microsoft.Extensions.Configuration;
 
 namespace LibraryManagementSystem.Infrastructure.Repositories
@@ -11,8 +9,7 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
     public class BookRepository : IBookRepository
     {
         #region Propriedades Privadas
-        private readonly string _connectionString;
-        
+        private readonly string _connectionString;        
         #endregion
 
         public BookRepository(IConfiguration configuration)

@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LibraryManagementSystem.Application.DTOs;
+using LibraryManagementSystem.Application.Services;
+using LibraryManagementSystem.Domain.Enum;
+using LibraryManagementSystem.Domain.Interfaces;
+using LibraryManagementSystem.Domain.Model;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagementSystem.API.Controllers
 {
@@ -6,7 +11,12 @@ namespace LibraryManagementSystem.API.Controllers
     [Route("api/loan")]
     public class LoanController : Controller
     {
+        private readonly GetLoansUseCase _getLoansUseCase;
 
+        public LoanController(GetLoansUseCase getLoansUseCase)
+        {
+            _getLoansUseCase = getLoansUseCase;
+        }
         /// <summary>
         /// Método para buscar todos os empréstimos.
         /// </summary>
@@ -14,7 +24,15 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet]
         public IActionResult GetAllLoans()
         {
-            return Ok("Endpoint OK");
+            var loan = _getLoansUseCase.GetAllLoans();
+
+            if (loan == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(loan);
+
         }
 
         /// <summary>
@@ -25,7 +43,14 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            return Ok(id);
+            var loan = _getLoansUseCase.GetLoanById(id);
+
+            if (loan == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(loan);
         }
 
         /// <summary>
@@ -33,9 +58,21 @@ namespace LibraryManagementSystem.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult CreateLoan() 
+        public IActionResult CreateLoan(LoanDto loanDto)
         {
-            return BadRequest();
+            var loan = new LoanModel
+            {
+                IdUser = loanDto.IdUser,
+                IdBook = loanDto.IdBook,
+                Loans = loanDto.Loans,
+                LoanDate = loanDto.LoanDate,
+                ReturnDate = loanDto.ReturnDate,
+                Status = (LoanEnums.LoanStatus)loanDto.Status,
+            };
+
+            _getLoansUseCase.CreateLoan(loan);
+
+            return Ok(loan);
         }
 
         /// <summary>
@@ -44,9 +81,18 @@ namespace LibraryManagementSystem.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPut]
-        public IActionResult UpdateLoan(int id) 
+        public IActionResult UpdateLoan(int id)
         {
-            return Ok(id);
+            var loan = _getLoansUseCase.GetLoanById(id);
+
+            if (loan == null)
+            {
+                return NotFound();
+            }
+
+            _getLoansUseCase.UpdateLoan(loan);
+
+            return Ok(loan);
         }
 
         /// <summary>
@@ -57,6 +103,15 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpDelete]
         public IActionResult DeleteLoan(int id)
         {
+            var loan = _getLoansUseCase.GetLoanById(id);
+
+            if (loan == null) 
+            {
+                return NotFound();
+            }
+
+            _getLoansUseCase.DeleteLoan(loan.Id);
+
             return Ok(id);
         }
 

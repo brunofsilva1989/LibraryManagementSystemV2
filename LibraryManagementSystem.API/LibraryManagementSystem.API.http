@@ -1,6 +1,74 @@
-@LibraryManagementSystem.API_HostAddress = http://localhost:5021
+@LibraryManagementSystem.API_HostAddress = https://localhost:44305
 
 GET {{LibraryManagementSystem.API_HostAddress}}/weatherforecast/
 Accept: application/json
+
+###
+//BookController
+
+@id=0
+GET {{LibraryManagementSystem.API_HostAddress}}/api/book/{{id}}
+
+###
+
+GET {{LibraryManagementSystem.API_HostAddress}}/api/book
+
+###
+
+POST {{LibraryManagementSystem.API_HostAddress}}/api/book
+Content-Type: application/json
+
+{
+  //BookDto
+}
+
+###
+
+PUT {{LibraryManagementSystem.API_HostAddress}}/api/book?id={{id}}
+
+###
+
+//UsersController
+
+GET {{LibraryManagementSystem.API_HostAddress}}/api/user/{{id}}
+
+###
+
+GET {{LibraryManagementSystem.API_HostAddress}}/api/user
+
+###
+
+POST {{LibraryManagementSystem.API_HostAddress}}/api/user
+
+###
+
+PUT {{LibraryManagementSystem.API_HostAddress}}/api/user?id={{id}}
+
+###
+
+DELETE {{LibraryManagementSystem.API_HostAddress}}/api/user?id={{id}}
+
+###
+
+//LoanController
+
+
+GET {{LibraryManagementSystem.API_HostAddress}}/api/loan/{{id}}
+
+###
+
+GET {{LibraryManagementSystem.API_HostAddress}}/api/loan
+
+###
+
+PUT {{LibraryManagementSystem.API_HostAddress}}/api/loan?id={{id}}
+
+###
+
+POST {{LibraryManagementSystem.API_HostAddress}}/api/loan
+
+###
+
+DELETE {{LibraryManagementSystem.API_HostAddress}}/api/loan?id={{id}}
 
 ###

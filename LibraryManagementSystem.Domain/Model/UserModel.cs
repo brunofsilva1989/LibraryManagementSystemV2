@@ -8,27 +8,25 @@ namespace LibraryManagementSystem.Domain.Model
 {
     public class UserModel
     {
-        public UserModel(int id, string cpf, string name, string email)
+        public UserModel() { }
+
+        public UserModel(int id, string cpf, string name, string email, string password)
         {
-            Id = GenerateId();
+            Id = id;
             CPF = cpf;
             Name = name;
             Email = email;
-        }
+            Password = password;
+            CreationDate = DateTime.Now;
+        }        
 
-        public UserModel()
-        {
-            
-        }
-
-        public int Id { get; private set; }
+        public int Id { get; set; }
         public string CPF { get; set; }
         public string Name { get; set; }
-        public string Email { get; set; }        
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public DateTime CreationDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
 
-        public int GenerateId()
-        {
-            return new Random().Next(1, 1000);
-        }
     }
 }

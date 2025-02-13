@@ -1,11 +1,9 @@
-﻿using LibraryManagementSystem.Domain.Interfaces;
+﻿using LibraryManagementSystem.Domain.Enum;
+using LibraryManagementSystem.Domain.Interfaces;
 using LibraryManagementSystem.Domain.Model;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
 
 namespace LibraryManagementSystem.Infrastructure.Repositories
 {
@@ -28,27 +26,111 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
 
         public void CreateLoan(LoanModel model)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(CREATE_LOAN, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@IdUser", model.IdUser);
+                    command.Parameters.AddWithValue("@IdBook", model.IdBook);
+                    command.Parameters.AddWithValue("@LoanDate", model.LoanDate);
+                    command.Parameters.AddWithValue("@ReturnDate", model.ReturnDate);
+                    command.ExecuteNonQuery();
+                }
+            }
+
         }
 
-        public void DeleteLoan(LoanModel model)
+        public void DeleteLoan(int id)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(DOWN_LOAN, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Id", id);
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         public IEnumerable<LoanModel> GetAllLoans()
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(GET_LOANS, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    using (var reader = command.ExecuteReader())
+                    {
+                        var loans = new List<LoanModel>();
+                        while (reader.Read())
+                        {
+                            loans.Add(new LoanModel
+                            {
+                                Id = (int)reader["Id"],
+                                IdUser = (int)reader["IdUser"],
+                                IdBook = (int)reader["IdBook"],
+                                LoanDate = (DateTime)reader["LoanDate"],
+                                ReturnDate = (DateTime)reader["ReturnDate"],
+                                Status = (LoanEnums.LoanStatus)Enum.Parse(typeof(LoanEnums.LoanStatus), reader["Status"].ToString())
+                            });
+                        }
+                        return loans;
+                    }
+                }
+            }
         }
 
         public LoanModel GetLoanById(int id)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(GET_LOAN_BY_ID, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Id", id);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new LoanModel
+                            {
+                                Id = (int)reader["Id"],
+                                IdUser = (int)reader["IdUser"],
+                                IdBook = (int)reader["IdBook"],
+                                LoanDate = (DateTime)reader["LoanDate"],
+                                ReturnDate = (DateTime)reader["ReturnDate"],
+                                Status = (LoanEnums.LoanStatus)Enum.Parse(typeof(LoanEnums.LoanStatus), reader["Status"].ToString())
+                            };
+                        }
+                        return null;
+                    }
+                }
+            }
         }
 
         public void UpdateLoan(LoanModel model)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(UPDATE_LOAN, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Id", model.Id);
+                    command.Parameters.AddWithValue("@IdUser", model.IdUser);
+                    command.Parameters.AddWithValue("@IdBook", model.IdBook);
+                    command.Parameters.AddWithValue("@LoanDate", model.LoanDate);
+                    command.Parameters.AddWithValue("@ReturnDate", model.ReturnDate);
+                    command.Parameters.AddWithValue("@Status", model.Status);
+                    command.ExecuteNonQuery();
+                }
+            }
         }
     }
 }
