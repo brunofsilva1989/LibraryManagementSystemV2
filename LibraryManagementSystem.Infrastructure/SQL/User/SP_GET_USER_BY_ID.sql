@@ -22,10 +22,10 @@ Autor                  IDBug Data       Descrição
 ---------------------- ----- ---------- ------------------------------------------------------------
 Bruno Silva			   00000 11/02/2025 Criação da procedure
 */
-CREATE PROCEDURE SP_GET_USER_BY_ID
+ALTER PROCEDURE SP_GET_USER_BY_ID
 	@ID INT
 AS
 BEGIN
-	SELECT NAME, CPF, EMAIL, CREATIONDATE FROM USERS(NOLOCK) WHERE ID = @ID
+	SELECT ID, NAME, CPF, EMAIL,Password, CREATIONDATE, UpdateDate FROM USERS(NOLOCK) WHERE ID = @ID
 END
 GO

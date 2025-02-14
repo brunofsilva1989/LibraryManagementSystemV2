@@ -6,7 +6,9 @@ using LibraryManagementSystem.Application.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using LibraryManagementSystem.Domain.Model;
-using LibraryManagementSystem.Application.Interfaces; // Add this using directive
+using LibraryManagementSystem.Application.Interfaces;
+using LibraryManagementSystem.Application.Queries;
+using LibraryManagementSystem.Application.Commands; // Add this using directive
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +17,19 @@ builder.Services.AddScoped<GetBookUseCase>();
 builder.Services.AddScoped<BookRepository>();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IUserRepository, UsersRepository>();
+builder.Services.AddScoped<GetUsersUseCase>();
+builder.Services.AddScoped<ILoanRepository, LoanRepository>();
 builder.Services.AddScoped<BookModel>();
-builder.Services.AddScoped<GetBookUseCase>();
+
+
+builder.Services.AddScoped<GetUsersQuery>();
+builder.Services.AddScoped<CreateUserCommand>();
+builder.Services.AddScoped<DeleteUserCommand>();
+builder.Services.AddScoped<UpdateUserCommand>();
+builder.Services.AddScoped<GetUsersByIdQuery>();
+
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

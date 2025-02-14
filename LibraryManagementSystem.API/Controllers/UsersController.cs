@@ -1,6 +1,9 @@
-﻿using LibraryManagementSystem.Application.DTOs;
+﻿using LibraryManagementSystem.Application.Commands;
+using LibraryManagementSystem.Application.DTOs;
+using LibraryManagementSystem.Application.Queries;
 using LibraryManagementSystem.Application.Services;
 using LibraryManagementSystem.Domain.Interfaces;
+using LibraryManagementSystem.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagementSystem.API.Controllers
@@ -9,12 +12,21 @@ namespace LibraryManagementSystem.API.Controllers
     [Route("api/user")]
     public class UsersController : Controller
     {
-        
-        private readonly GetUsersUseCase _getUsersUseCase;
 
-        public UsersController(IUserRepository userRepository, GetUsersUseCase getUsersUseCase)
+        private readonly GetUsersQuery _getUsersQuery;
+        private readonly GetUsersByIdQuery _getUsersByIdQuery;
+        private readonly CreateUserCommand _createUserCommand;
+        private readonly UpdateUserCommand _updateUserCommand;
+        private readonly DeleteUserCommand _deleteUserCommand;
+
+
+        public UsersController(GetUsersQuery getUsersQuery, GetUsersByIdQuery getUsersByIdQuery, CreateUserCommand createUserCommand, UpdateUserCommand updateUserCommand, DeleteUserCommand deleteUserCommand)
         {
-            _getUsersUseCase = getUsersUseCase;            
+            _createUserCommand = createUserCommand;
+            _getUsersQuery = getUsersQuery;
+            _getUsersByIdQuery = getUsersByIdQuery;
+            _updateUserCommand = updateUserCommand;
+            _deleteUserCommand = deleteUserCommand;
         }
 
 
@@ -22,14 +34,14 @@ namespace LibraryManagementSystem.API.Controllers
         /// Método para buscar todos os usuários.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public IActionResult GetAllUsers()
+        [HttpGet("get-users")]
+        public IActionResult Get()
         {
-            var users = _getUsersUseCase.GetAllUsers();
+            var users = _getUsersQuery.Execute();
 
             if (users == null)
             {
-                return NotFound();
+                return NotFound("User not found!");
             }
 
             return Ok(users);
@@ -39,16 +51,16 @@ namespace LibraryManagementSystem.API.Controllers
         /// Método para buscar um usuário por seu id.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id) 
+        [HttpGet("get-users/{id}")]
+        public IActionResult GetById(int id)
         {
-            var user = _getUsersUseCase.GetUserById(id);
+            var user = _getUsersByIdQuery.Execute(id);
 
             if (user == null)
             {
                 return NotFound("User not found");
             }
-            
+
             return Ok(user);
         }
 
@@ -56,18 +68,10 @@ namespace LibraryManagementSystem.API.Controllers
         /// Método para criar um novo usuário.
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        public IActionResult CreateUser(UsersDto usersDto) 
+        [HttpPost("create-user")]
+        public IActionResult CreateUser(UserModel user)
         {
-            var user = new UsersDto
-            {
-                Name = usersDto.Name,
-                CPF = usersDto.CPF,
-                Email = usersDto.Email,
-                Password = usersDto.Password,
-                CreationDate = usersDto.CreationDate,
-                UpdateDate = usersDto.UpdateDate,
-            };
+            _createUserCommand.Execute(user);
 
             return Ok(user);
         }
@@ -76,38 +80,30 @@ namespace LibraryManagementSystem.API.Controllers
         /// Método para atualizar um usuário
         /// </summary>
         /// <returns></returns>
-        [HttpPut]
-        public IActionResult UpdateUser(int id) 
+        [HttpPut("update-user/{id}")]
+        public IActionResult UpdateUser(int id, [FromBody] UserModel user) 
         {
-            var user = _getUsersUseCase.GetUserById(id);
-
-            if (user == null)
+            //nõa tera mais use case só o padrao cqrs
+            var existingUser = _getUsersQuery.Execute(id);
+            if (existingUser == null)
             {
-                return NotFound();
+                return NotFound("User not found!");
             }
 
-            _getUsersUseCase.UpdateUser(user);
-
-            return Ok(user);
+            _createUserCommand.Execute(id, user);
+            return Ok("user Updated successfully!");
         }
 
         /// <summary>
         /// Método para deletar um usuário com base num id.
         /// </summary>
         /// <returns></returns>
-        [HttpDelete]
+        [HttpDelete("delete-user")]
         public IActionResult DeleteUser(int id) 
         {
-            var user = _getUsersUseCase.GetUserById(id);
-
-            if (user == null)
-            {
-                return NotFound("User not found!");
-            }
-
-            _getUsersUseCase.DeleteUser(user.Id);
-
-            return Ok(id);
+            _deleteUserCommand.Execute(id);
+          
+            return Ok("User deleted!");
         }
 
     }

@@ -60,9 +60,9 @@ namespace LibraryManagementSystem.Application.Services
         /// Get all users in the Use Case
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<UserModel> GetAllUsers()
+        public IEnumerable<UserModel> GetUsers()
         {
-            var users = _userRepository.GetAllUsers();
+            var users = _userRepository.GetUsers();
             return users.Select(user => new UserModel
             {
                 Id = user.Id,

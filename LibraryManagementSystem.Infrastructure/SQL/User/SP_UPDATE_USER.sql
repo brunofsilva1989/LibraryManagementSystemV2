@@ -22,16 +22,21 @@ Autor                  IDBug Data       Descrição
 ---------------------- ----- ---------- ------------------------------------------------------------
 Bruno Silva			   00000 11/02/2025 Criação da procedure
 */
-CREATE PROCEDURE SP_UPDATE_USER
+ALTER PROCEDURE SP_UPDATE_USER
 	@ID INT,
-	@NAME NVARCHAR(100),
-	@EMAIL NVARCHAR(50),
-	@CPF NVARCHAR(11),
-	@PASSWORD NVARCHAR(8)
+	@NAME VARCHAR(100),
+	@EMAIL VARCHAR(50),
+	@CPF VARCHAR(11),
+	@PASSWORD VARCHAR(8),
+	@UPDATEDATE SMALLDATETIME = NULL
 AS
 BEGIN
+
+	IF @UPDATEDATE IS NULL 
+        SET @UPDATEDATE = GETDATE();
+
 	UPDATE USERS 
-	SET NAME = @NAME, EMAIL = @EMAIL, CPF = @CPF, PASSWORD = @PASSWORD 
+	SET NAME = @NAME, EMAIL = @EMAIL, CPF = @CPF, PASSWORD = @PASSWORD, UpdateDate = @UPDATEDATE
 	WHERE ID = @ID
 END
 GO

@@ -13,6 +13,6 @@ namespace LibraryManagementSystem.Domain.Interfaces
         void DeleteUser(int id);
         void UpdateUser(UserModel model);
         UserModel GetUserById(int id);
-        IEnumerable<UserModel> GetAllUsers();
+        IEnumerable<UserModel> GetUsers();
     }
 }

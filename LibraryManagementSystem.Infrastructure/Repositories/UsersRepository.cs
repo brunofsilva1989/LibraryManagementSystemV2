@@ -66,8 +66,10 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
         /// Get all users in the Base
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<UserModel> GetAllUsers()
+        public IEnumerable<UserModel> GetUsers()
         {
+            var users = new List<UserModel>();
+
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -76,24 +78,26 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
                     command.CommandType = CommandType.StoredProcedure;
                     using (var reader = command.ExecuteReader())
                     {
-                        var users = new List<UserModel>();
+                        
                         while (reader.Read())
                         {
-                            users.Add(new UserModel
+                            var user = new UserModel
                             {
-                                Id = (int)reader["Id"],
+                                Id = Convert.ToInt32(reader["Id"]),
                                 CPF = reader["CPF"].ToString(),
                                 Name = reader["Name"].ToString(),
                                 Email = reader["Email"].ToString(),
                                 Password = reader["Password"].ToString(),
-                                CreationDate = (DateTime)reader["CreationDate"],
-                                UpdateDate = reader["UpdateDate"] as DateTime?
-                            });
+                                CreationDate = reader["CreationDate"] != DBNull.Value ? (DateTime)reader["CreationDate"] : default(DateTime),
+                                UpdateDate = reader["UpdateDate"] != DBNull.Value ? (DateTime?)reader["UpdateDate"] : null
+                            };                                                       
+                            users.Add(user);
                         }
-                        return users;
+                        
                     }
                 }
             }
+            return users;
         }
 
         /// <summary>
@@ -103,6 +107,8 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
         /// <returns></returns>
         public UserModel GetUserById(int id)
         {
+            UserModel user = null;
+
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -114,21 +120,22 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
                     {
                         if (reader.Read())
                         {
-                            return new UserModel
+                            user = new UserModel
                             {
-                                Id = (int)reader["Id"],
+                                Id = Convert.ToInt32(reader["Id"]),
                                 CPF = reader["CPF"].ToString(),
                                 Name = reader["Name"].ToString(),
                                 Email = reader["Email"].ToString(),
                                 Password = reader["Password"].ToString(),
-                                CreationDate = (DateTime)reader["CreationDate"],
-                                UpdateDate = reader["UpdateDate"] as DateTime?
+                                CreationDate = reader["CreationDate"] != DBNull.Value ? (DateTime)reader["CreationDate"] : default(DateTime),
+                                UpdateDate = reader["UpdateDate"] != DBNull.Value ? (DateTime?)reader["UpdateDate"] : null
                             };
                         }
-                        return null;
+                       
                     }
                 }
             }
+            return user;
         }
 
         /// <summary>
