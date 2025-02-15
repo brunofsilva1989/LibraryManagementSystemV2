@@ -3,6 +3,7 @@ using LibraryManagementSystem.Domain.Model;
 using LibraryManagementSystem.Application.DTOs;
 using LibraryManagementSystem.Application.Commands;
 using LibraryManagementSystem.Application.Queries;
+using LibraryManagementSystem.Domain.Exceptions;
 
 namespace LibraryManagementSystem.API.Controllers
 {
@@ -50,12 +51,17 @@ namespace LibraryManagementSystem.API.Controllers
         /// <returns></returns>
         [HttpGet("get-book-by-id/{id}")]
         public IActionResult GetBookById(int id)
-        {            
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Invalid book Id"); //Retorna Erro 404 Bad Request
+            }
+
             var book = _getBookByIdQuery.Execute(id);
             
             if (book == null) 
             {
-                return NotFound("Book not found!");                    
+                return NotFound($"Book with Id {id} not found!"); //Retorna erro 404 Not Found
             }
 
             return Ok(book);

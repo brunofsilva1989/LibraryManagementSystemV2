@@ -3,7 +3,9 @@ using LibraryManagementSystem.Domain.Interfaces;
 using LibraryManagementSystem.Infrastructure.Repositories;
 using LibraryManagementSystem.Domain.Model;
 using LibraryManagementSystem.Application.Queries;
-using LibraryManagementSystem.Application.Commands; // Add this using directive
+using LibraryManagementSystem.Application.Commands;
+using LibraryManagementSystem.Infrastructure.Middleware;
+using LibraryManagementSystem.Infrastructure.Filters; // Add this using directive
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +16,6 @@ builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IUserRepository, UsersRepository>();
 builder.Services.AddScoped<ILoanRepository, LoanRepository>();
 builder.Services.AddScoped<BookModel>();
-
 builder.Services.AddScoped<GetUsersQuery>();
 builder.Services.AddScoped<CreateUserCommand>();
 builder.Services.AddScoped<DeleteUserCommand>();
@@ -33,6 +34,12 @@ builder.Services.AddScoped<ReturnLoanCommand>();
 builder.Services.AddScoped<UpdateLoanCommand>();
 builder.Services.AddScoped<MarkLoanLateCommand>();
 
+//Filtros do Exception Handler
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ExceptionFilter>();
+});
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -44,11 +51,13 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LibraryManagementSystem V1"));
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LibraryManagementSystem V2"));
 }
 
 app.UseHttpsRedirection();

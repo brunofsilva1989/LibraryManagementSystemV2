@@ -1,5 +1,4 @@
-﻿using LibraryManagementSystem.Domain.Enum;
-using LibraryManagementSystem.Domain.Interfaces;
+﻿using LibraryManagementSystem.Domain.Interfaces;
 using LibraryManagementSystem.Domain.Model;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;

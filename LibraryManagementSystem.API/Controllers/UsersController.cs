@@ -1,5 +1,6 @@
 ﻿using LibraryManagementSystem.Application.Commands;
 using LibraryManagementSystem.Application.Queries;
+using LibraryManagementSystem.Domain.Exceptions;
 using LibraryManagementSystem.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,6 +27,11 @@ namespace LibraryManagementSystem.API.Controllers
             _deleteUserCommand = deleteUserCommand;
         }
 
+        [HttpGet("test-exception")]
+        public IActionResult TestException()
+        {
+            throw new Exception("Isso é um erro de teste!");
+        }
 
         /// <summary>
         /// Método para buscar todos os usuários.
@@ -38,7 +44,7 @@ namespace LibraryManagementSystem.API.Controllers
 
             if (users == null)
             {
-                return NotFound("User not found!");
+                throw new NotFoundException($"User not found in the Base!");
             }
 
             return Ok(users);
@@ -55,7 +61,7 @@ namespace LibraryManagementSystem.API.Controllers
 
             if (user == null)
             {
-                return NotFound("User not found");
+                throw new NotFoundException($"User with Id {id} not found!");
             }
 
             return Ok(user);
