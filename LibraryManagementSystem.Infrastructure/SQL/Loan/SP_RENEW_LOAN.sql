@@ -1,10 +1,10 @@
 /*--------------------------------------------------------------------------------------------        
 Tipo Objeto				: Stored Procedure        
-Objeto					: SP_GET_LOAN_BY_ID
-Objetivo				: Busca um empréstimo pelo ID
+Objeto					: SP_RENEW_LOAN
+Objetivo				: Delete um emprestimo no Banco de Dados
 Projeto					: Administração de banco de Dados         
 Empresa Responsável		: BFS Treinamentos
-Criado em				: 11/02/2025
+Criado em				: 15/02/2025
 Execução				: SSMS        
 Palavras-chave			: Indices, Tabelas, Tamanho, Utilização  
 ----------------------------------------------------------------------------------------------        
@@ -20,12 +20,13 @@ Dicionário:
 Histórico:        
 Autor                  IDBug Data       Descrição        
 ---------------------- ----- ---------- ------------------------------------------------------------
-Bruno Silva			   00000 11/02/2025 Criação da procedure
+Bruno Silva			   00000 15/02/2025 Criação da procedure
 */
-CREATE PROCEDURE SP_GET_LOAN_BY_ID
-@ID INT
+CREATE PROCEDURE SP_RENEW_LOAN
+@IDLOAN INT
 AS
 BEGIN
-	SELECT * FROM LOAN(NOLOCK)
-	WHERE ID = @ID
+	UPDATE LOAN
+	SET RETURNDATE = DATEADD(DAY, 7, RETURNDATE), RENEWCOUNT = RENEWCOUNT + 1
+	WHERE ID = @IDLOAN AND STATUS = 1;
 END

@@ -1,7 +1,7 @@
 /*--------------------------------------------------------------------------------------------        
 Tipo Objeto				: Stored Procedure        
 Objeto					: SP_UPDATE_LOAN
-Objetivo				: Atualiza emprestimo no banco
+Objetivo				: Estende o empréstimo do livro por mais 7 dias, e se o livro foi devolvido.
 Projeto					: Administração de banco de Dados         
 Empresa Responsável		: BFS Treinamentos
 Criado em				: 11/02/2025
@@ -20,20 +20,13 @@ Dicionário:
 Histórico:        
 Autor                  IDBug Data       Descrição        
 ---------------------- ----- ---------- ------------------------------------------------------------
-Bruno Silva			   00000 11/02/2025 Criação da procedure
+Bruno Silva			   00000 15/02/2025 Criação da procedure
 */
 CREATE PROCEDURE SP_UPDATE_LOAN
-@ID INT,
-@ID_USER INT,
-@ID_BOOK INT,
-@DATE_LOAN DATETIME,
-@DATE_DEVOLUTION DATETIME
+@IDLOAN INT
 AS
 BEGIN
 	UPDATE LOAN
-	SET ID_USER = @ID_USER,
-		ID_BOOK = @ID_BOOK,
-		DATE_LOAN = @DATE_LOAN,
-		DATE_DEVOLUTION = @DATE_DEVOLUTION
-	WHERE ID = @ID
+	SET RETURNDATE = DATEADD(DAY, 7, GETDATE()), RENEWCOUNT = RENEWCOUNT + 1
+	WHERE ID = @IDLOAN AND STATUS = 1
 END

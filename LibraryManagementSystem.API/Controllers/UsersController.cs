@@ -1,8 +1,5 @@
 ﻿using LibraryManagementSystem.Application.Commands;
-using LibraryManagementSystem.Application.DTOs;
 using LibraryManagementSystem.Application.Queries;
-using LibraryManagementSystem.Application.Services;
-using LibraryManagementSystem.Domain.Interfaces;
 using LibraryManagementSystem.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 

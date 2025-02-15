@@ -1,5 +1,4 @@
-﻿using LibraryManagementSystem.Application.Interfaces;
-using LibraryManagementSystem.Domain.Interfaces;
+﻿using LibraryManagementSystem.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

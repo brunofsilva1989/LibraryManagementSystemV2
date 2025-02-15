@@ -9,11 +9,12 @@ namespace LibraryManagementSystem.Domain.Interfaces
 {
     public interface ILoanRepository
     {
-        void CreateLoan(LoanModel model);
-        void DeleteLoan(int id);
+        void CreateLoan(int userId, int bookId);
+        void DeleteLoan(int loanId);
         void UpdateLoan(LoanModel model);
-        LoanModel GetLoanById(int id);
-        IEnumerable<LoanModel> GetAllLoans();
-
+        LoanModel GetLoanByUser(int userId);
+        void MarkLoanLate();
+        void RenewLoan(int loanId);
+        void ReturnLoan(int loanId);        
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using LibraryManagementSystem.Domain.Interfaces;
 using LibraryManagementSystem.Domain.Model;
 using LibraryManagementSystem.Application.DTOs;
-using LibraryManagementSystem.Application.Services;
+using LibraryManagementSystem.Application.Commands;
+using LibraryManagementSystem.Application.Queries;
 
 namespace LibraryManagementSystem.API.Controllers
 {
@@ -10,113 +10,104 @@ namespace LibraryManagementSystem.API.Controllers
     [Route("api/book")]
     public class BookController : ControllerBase
     {
-        
-        private readonly IBookRepository _bookService;
-        private readonly GetBookUseCase _getBookUseCase;
 
-        public BookController(IBookRepository bookService, GetBookUseCase getBookUseCase)
+        private readonly CreateBookCommand _createBookCommand;  
+        private readonly GetBooksQuery _getBooksQuery;
+        private readonly GetBookByIdQuery _getBookByIdQuery;
+        private readonly UpdateBookCommand _updateBookCommand;
+        private readonly DeleteBookCommand _deleteBookCommand;
+
+        public BookController(CreateBookCommand createBookCommand, GetBooksQuery getBooksQuery, GetBookByIdQuery getBookByIdQuery, UpdateBookCommand updateBookCommand, DeleteBookCommand deleteBookCommand)
         {
-            _bookService = bookService;
-            _getBookUseCase = getBookUseCase;
+            _createBookCommand = createBookCommand;
+            _getBooksQuery = getBooksQuery;
+            _getBookByIdQuery = getBookByIdQuery;
+            _updateBookCommand = updateBookCommand;
+            _deleteBookCommand = deleteBookCommand;
         }
 
         /// <summary>
-        /// Esté método busca todos os livros cadastrados no banco.
+        /// Método para buscar todos os livros.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]        
-        public IActionResult Get()
+        [HttpGet("get-books")]        
+        public IActionResult GetBooks()
         {
-            var books = _getBookUseCase.GetBooks();
-
+            var books = _getBooksQuery.Execute();
+            
             if (books == null)
             {
-                return NotFound();
+                return NotFound("Book not found!");
             }
 
             return Ok(books);
         }
 
         /// <summary>
-        /// Esté método busca o livro com base no id passado como parâmetro
+        /// Método para buscar um livro por seu id.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
-        {
-            //trazer o livro pelo id
-            var book = _getBookUseCase.GetById(id);
-            if (book == null) {
-                return NotFound();                    
+        [HttpGet("get-book-by-id/{id}")]
+        public IActionResult GetBookById(int id)
+        {            
+            var book = _getBookByIdQuery.Execute(id);
+            
+            if (book == null) 
+            {
+                return NotFound("Book not found!");                    
             }
 
             return Ok(book);
         }
 
         /// <summary>
-        /// Este método cria um novo registro de um livro no banco de dados.
+        /// Método para criar um livro.
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        public IActionResult CreateBook(BookDto modelDto)
+        [HttpPost("create-book")]
+        public IActionResult CreateBook(BookDto bookModel)
         {
-            var bookModel = new BookModel
+            var book = new BookModel
             {
-                Title = modelDto.Title,
-                Author = modelDto.Author,
-                ISBN = modelDto.ISBN,
-                YearPublication = modelDto.YearPublication
+                Title = bookModel.Title,
+                Author = bookModel.Author,
+                ISBN = bookModel.ISBN,
+                YearPublication = bookModel.YearPublication
             };
 
-            _getBookUseCase.CreateBook(bookModel);
+            _createBookCommand.Execute(book);
 
-            if (modelDto != null) 
+            if (book != null) 
             {
                 return Ok("Livro gravado com sucesso!");
             }
            
-            return Ok(modelDto);
+            return Ok(bookModel);
         }
 
         /// <summary>
-        /// Este método atualiza o registrio de um livro com base no id passado como parâmetro
+        /// Método para atualizar um livro.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPut]
-        public IActionResult UpdateBook(int id) 
+        [HttpPost("update-book")]
+        public IActionResult UpdateBook(BookModel book) 
         {
-            //trazer os campos do livro para atualizar
-            var book = _getBookUseCase.GetById(id);
-
-            if (book == null) {
-                return NotFound();
-            }
-
-            _getBookUseCase.UpdateBook(book);
-
-            return Ok(book);
+            _updateBookCommand.Execute(book);
+            return Ok("Book updated successfully!");
         }
 
         /// <summary>
-        /// Esté método remove um livro da base, passano o id específico como parâmetro.
+        /// Método para deletar um livro.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete]
-        public IActionResult DeleteBook(int id) 
+        [HttpDelete("delete-book/{bookId}")]
+        public IActionResult DeleteBook(int bookId) 
         {
-            var book = _getBookUseCase.GetById(id);
-
-            if (book == null)
-            {
-                return NotFound();
-            }
-
-            _getBookUseCase.DeleteBook(id);
-
-            return NoContent();
+            _deleteBookCommand.Execute(bookId);
+            return Ok("Book deleted successfully!");
         }
     }
 }

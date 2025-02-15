@@ -7,7 +7,7 @@ namespace LibraryManagementSystem.Domain.Interfaces
         void CreateBook(BookModel model);
         void UpdateBook(BookModel model);
         void DeleteBook(int id);
-        BookModel GetById(int id);
+        BookModel GetBookById(int id);
         IEnumerable<BookModel> GetBooks();
     }
 }

@@ -86,7 +86,7 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public BookModel GetById(int id)
+        public BookModel GetBookById(int id)
         {
             BookModel book = null;
 

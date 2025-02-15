@@ -1,10 +1,10 @@
 /*--------------------------------------------------------------------------------------------        
 Tipo Objeto				: Stored Procedure        
-Objeto					: SP_CREATE_LOAN
-Objetivo				: Cria um novo emprestimo no Banco de Dados
+Objeto					: SP_DELETE_LOAN
+Objetivo				: Delete um emprestimo no Banco de Dados
 Projeto					: Administração de banco de Dados         
 Empresa Responsável		: BFS Treinamentos
-Criado em				: 11/02/2025
+Criado em				: 15/02/2025
 Execução				: SSMS        
 Palavras-chave			: Indices, Tabelas, Tamanho, Utilização  
 ----------------------------------------------------------------------------------------------        
@@ -22,19 +22,11 @@ Autor                  IDBug Data       Descrição
 ---------------------- ----- ---------- ------------------------------------------------------------
 Bruno Silva			   00000 15/02/2025 Criação da procedure
 */
-ALTER PROCEDURE SP_CREATE_LOAN
-@IDUSER INT,
-@IDBOOK INT
+CREATE PROCEDURE SP_DELETE_LOAN
+@IDLOAN INT
 AS
-
-DECLARE @LOANDATE DATETIME, @RETURNDATE DATETIME;
-SET @LOANDATE = GETDATE();
-SET @RETURNDATE = DATEADD(DAY, 7, @LOANDATE);
-
-
 BEGIN
-	INSERT INTO LOAN(IDUSER, IDBOOK, LOANDATE, RETURNDATE, STATUS)
-	VALUES(@IDUSER, @IDBOOK, @LOANDATE, @RETURNDATE, 1)
+	DELETE FROM LOAN
+	WHERE ID = @IDLOAN AND STATUS = 0
 END
 
---select * from loan

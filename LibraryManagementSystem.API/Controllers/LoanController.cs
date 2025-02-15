@@ -1,9 +1,9 @@
-﻿using LibraryManagementSystem.Application.DTOs;
-using LibraryManagementSystem.Application.Services;
-using LibraryManagementSystem.Domain.Enum;
-using LibraryManagementSystem.Domain.Interfaces;
+﻿using LibraryManagementSystem.Application.Commands;
+using LibraryManagementSystem.Application.DTOs;
+using LibraryManagementSystem.Application.Queries;
 using LibraryManagementSystem.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
+using static LibraryManagementSystem.Domain.Enum.LoanEnums;
 
 namespace LibraryManagementSystem.API.Controllers
 {
@@ -11,108 +11,124 @@ namespace LibraryManagementSystem.API.Controllers
     [Route("api/loan")]
     public class LoanController : Controller
     {
-        private readonly GetLoansUseCase _getLoansUseCase;
+        private readonly DeleteLoanCommand _deleteLoanCommand;        
+        private readonly UpdateLoanCommand _updateLoanCommand;
+        private readonly CreateLoanCommand _createLoanCommand;
+        private readonly MarkLoanLateCommand _markLoanLateCommand;
+        private readonly RenewLoanCommand _renewLoanCommand;
+        private readonly ReturnLoanCommand _returnLoanCommand;
+        private readonly GetLoanByUserQuery _getLoanByUserQuery; 
 
-        public LoanController(GetLoansUseCase getLoansUseCase)
-        {
-            _getLoansUseCase = getLoansUseCase;
+
+        public LoanController(GetLoanByUserQuery getLoanByUserQuery,UpdateLoanCommand updateLoanCommand, CreateLoanCommand createLoanCommand, MarkLoanLateCommand markLoanLateCommand, RenewLoanCommand renewLoanCommand, ReturnLoanCommand returnLoanCommand)
+        {            
+            _updateLoanCommand = updateLoanCommand;
+            _createLoanCommand = createLoanCommand;
+            _markLoanLateCommand = markLoanLateCommand;
+            _renewLoanCommand = renewLoanCommand;
+            _returnLoanCommand = returnLoanCommand;
+            _getLoanByUserQuery = getLoanByUserQuery;
         }
+
+
         /// <summary>
-        /// Método para buscar todos os empréstimos.
+        /// Método para criar um empréstimo.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public IActionResult GetAllLoans()
+        [HttpPost("create-loan")]
+        public IActionResult CreateLoan(int userId, int bookId)
         {
-            var loan = _getLoansUseCase.GetAllLoans();
-
-            if (loan == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(loan);
-
+            _createLoanCommand.Execute(userId, bookId);
+            
+            return Ok("Loan created successfully!");
         }
 
         /// <summary>
-        /// Método para buscar um empréstimo com base num id.
+        /// Método para trazer emprestimos por usuário.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        [HttpGet("get-loan-by-user/{id}")]
+        public IActionResult GetLoanByUser(int userId)
         {
-            var loan = _getLoansUseCase.GetLoanById(id);
+            var loan = _getLoanByUserQuery.Execute(userId);
 
             if (loan == null)
             {
-                return NotFound();
+                return NotFound("No Loan found for this user");
             }
 
             return Ok(loan);
         }
 
         /// <summary>
-        /// Método para criar um novo empréstimo.
+        /// Método para marcar um empréstimo como atrasado.
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        public IActionResult CreateLoan(LoanDto loanDto)
+        [HttpPost("return-loan/{loanId}")]
+        public IActionResult ReturnLoan(LoanDto loanDto)
         {
-            var loan = new LoanModel
+            _returnLoanCommand.Execute(loanDto.Id);
+            return Ok("Loan returned successfully!");
+        }
+
+        /// <summary>
+        /// Método para renovar um empréstimo.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost("renew-loan/{loanId}")]
+        public IActionResult RenewLoan(int id)
+        {
+            _renewLoanCommand.Execute(id);
+            return Ok("Loan renewed successfully!");
+        }
+
+        [HttpPost("update-loan")]
+        public IActionResult UpdateLoan(LoanDto loanDto)
+        {
+            var loanModel = new LoanModel
             {
+                Id = loanDto.Id,
                 IdUser = loanDto.IdUser,
                 IdBook = loanDto.IdBook,
-                Loans = loanDto.Loans,
                 LoanDate = loanDto.LoanDate,
                 ReturnDate = loanDto.ReturnDate,
-                Status = (LoanEnums.LoanStatus)loanDto.Status,
+                Status = (LoanStatus)loanDto.Status
             };
 
-            _getLoansUseCase.CreateLoan(loan);
+            _updateLoanCommand.Execute(loanModel);
 
-            return Ok(loan);
+            if (loanDto != null)
+            {
+                return Ok("Loan updated successfully!");
+            }
+
+            return Ok(loanDto);
         }
 
         /// <summary>
-        /// Método para atualizar um empréstimo.
+        /// Método para marcar um empréstimo como atrasado.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPut]
-        public IActionResult UpdateLoan(int id)
+        [HttpPost("mark-late")]
+        public IActionResult MarkLoanLate()
         {
-            var loan = _getLoansUseCase.GetLoanById(id);
-
-            if (loan == null)
-            {
-                return NotFound();
-            }
-
-            _getLoansUseCase.UpdateLoan(loan);
-
-            return Ok(loan);
+            _markLoanLateCommand.Execute();
+            return Ok("Loan marked as late successfully!");
         }
 
         /// <summary>
         /// Método para deletar um empréstimo.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="loanId"></param>
         /// <returns></returns>
-        [HttpDelete]
-        public IActionResult DeleteLoan(int id)
+        [HttpDelete("delete-loan/{loanId}")]
+        public IActionResult DeleteLoan(int loanId)
         {
-            var loan = _getLoansUseCase.GetLoanById(id);
-
-            if (loan == null) 
-            {
-                return NotFound();
-            }
-
-            _getLoansUseCase.DeleteLoan(loan.Id);
-
-            return Ok(id);
+            _deleteLoanCommand.Execute(loanId);
+            return Ok("Loan deleted successfully!");
         }
 
     }

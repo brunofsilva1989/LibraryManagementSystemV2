@@ -1,7 +1,7 @@
 /*--------------------------------------------------------------------------------------------        
 Tipo Objeto				: Stored Procedure        
-Objeto					: SP_DOWN_LOAN
-Objetivo				: Baixa um emprestimo no banco
+Objeto					: SP_RETURN_LOAN
+Objetivo				: Cliente devolve livro e da baixa no empréstimo no Banco de Dados
 Projeto					: Administração de banco de Dados         
 Empresa Responsável		: BFS Treinamentos
 Criado em				: 11/02/2025
@@ -20,14 +20,16 @@ Dicionário:
 Histórico:        
 Autor                  IDBug Data       Descrição        
 ---------------------- ----- ---------- ------------------------------------------------------------
-Bruno Silva			   00000 11/02/2025 Criação da procedure
+Bruno Silva			   00000 15/02/2025 Criação da procedure
+Bruno Silva			   00001 15/02/2025 Alteração de parametros e execução.
 */
-CREATE PROCEDURE SP_DOWN_LOAN
-@STATUS INT
+ALTER PROCEDURE SP_RETURN_LOAN
+@IDLOAN INT
 AS
 BEGIN
-	DELETE FROM LOAN
-	WHERE STATUS = @STATUS
+	UPDATE LOAN
+	SET ActualReturnDate = GETDATE(), STATUS = 2
+	WHERE ID = @IDLOAN
 END
 
 
