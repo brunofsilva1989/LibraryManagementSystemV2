@@ -138,7 +138,9 @@ PUT	/api/loans/return/{id}	Finaliza um empréstimo (devolução)
 
 DELETE	/api/loans/{id}	Remove um empréstimo
 
+
 📌 Padrões Implementados
+
 ✅ Clean Architecture → Código modular e bem estruturado.
 
 ✅ CQRS (Command & Query Responsibility Segregation) → Separação entre leitura e escrita.
