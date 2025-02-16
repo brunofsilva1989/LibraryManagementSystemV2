@@ -165,17 +165,24 @@ DELETE	/api/loans/{id}	Remove um empréstimo
 **************************************************************
 
 📌 Padrões Implementados
+✅ Clean Architecture → Código modular e bem estruturado, separando responsabilidades entre Domain, Application, Infrastructure e API.
 
-✅ Clean Architecture → Código modular e bem estruturado.
+✅ CQRS (Command & Query Responsibility Segregation) → Separação entre operações de leitura (Queries) e escrita (Commands) para melhor escalabilidade.
 
-✅ CQRS (Command & Query Responsibility Segregation) → Separação entre leitura e escrita.
+✅ Repository Pattern → Implementação de repositórios genéricos para acesso a dados via ADO.NET e Stored Procedures.
 
-✅ Middleware de Exception Handling → Tratamento global de erros.
+✅ Middleware de Exception Handling → Tratamento global de erros centralizado, evitando a necessidade de capturar exceções manualmente em cada Controller.
 
-✅ Validação Avançada (FluentValidation & DataAnnotations) → Garante dados corretos antes de salvar no banco.
+✅ Validação Avançada (FluentValidation & DataAnnotations) → Garante que os dados sejam validados antes de serem persistidos no banco de dados.
 
-✅ Fluxo de empréstimos completo → Criar, renovar, devolver e excluir empréstimos.
+✅ Fluxo de empréstimos completo → Criar, renovar, devolver e excluir empréstimos, garantindo controle total da jornada de empréstimos de livros.
 
-✅ Injeção de Dependência → Organização correta no Program.cs.
+✅ Injeção de Dependência (Dependency Injection - DI) → Configuração correta no Program.cs, garantindo a injeção de serviços e repositórios sem acoplamento.
+
+✅ Unit of Work (Conceito aplicado) → Controle de transações no banco de dados através de Stored Procedures, garantindo atomicidade nas operações.
+
+✅ SOLID Principles → Código organizado seguindo os princípios SOLID, melhorando a manutenibilidade e extensibilidade.
+
+
 
 
