@@ -140,10 +140,15 @@ DELETE	/api/loans/{id}	Remove um empréstimo
 
 📌 Padrões Implementados
 ✅ Clean Architecture → Código modular e bem estruturado.
+
 ✅ CQRS (Command & Query Responsibility Segregation) → Separação entre leitura e escrita.
+
 ✅ Middleware de Exception Handling → Tratamento global de erros.
+
 ✅ Validação Avançada (FluentValidation & DataAnnotations) → Garante dados corretos antes de salvar no banco.
+
 ✅ Fluxo de empréstimos completo → Criar, renovar, devolver e excluir empréstimos.
+
 ✅ Injeção de Dependência → Organização correta no Program.cs.
 
 
