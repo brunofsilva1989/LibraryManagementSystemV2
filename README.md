@@ -26,7 +26,7 @@ Antes de rodar o projeto, siga os passos abaixo para configurar o ambiente corre
 
 ### **1️⃣ Clonar o Repositório**
 
-git clone https://github.com/seu-usuario/seu-repositorio.git
+[git clone https://github.com/seu-usuario/seu-repositorio.git](https://github.com/brunofsilva1989/LibraryManagementSystemV2.git)
 cd seu-repositorio
 
 ### **2️⃣ Configurar a Connection String
