@@ -105,25 +105,37 @@ A API estará disponível em:
 🔹 UserController
 Método	Rota	Descrição
 POST	/api/users	Cria um novo usuário
+
 GET	/api/users/{id}	Retorna um usuário por ID
+
 GET	/api/users	Lista todos os usuários
+
 PUT	/api/users/{id}	Atualiza um usuário
+
 DELETE	/api/users/{id}	Deleta um usuário
 
 🔹 BookController
 Método	Rota	Descrição
 POST	/api/books	Adiciona um novo livro
+
 GET	/api/books/{id}	Retorna um livro por ID
+
 GET	/api/books	Lista todos os livros
+
 PUT	/api/books/{id}	Atualiza um livro
+
 DELETE	/api/books/{id}	Deleta um livro
 
 🔹 LoanController
 Método	Rota	Descrição
 POST	/api/loans	Cria um novo empréstimo
+
 GET	/api/loans/{userId}	Lista empréstimos de um usuário
+
 PUT	/api/loans/renew/{id}	Renova um empréstimo
+
 PUT	/api/loans/return/{id}	Finaliza um empréstimo (devolução)
+
 DELETE	/api/loans/{id}	Remove um empréstimo
 
 📌 Padrões Implementados
