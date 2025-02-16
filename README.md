@@ -165,6 +165,7 @@ DELETE	/api/loans/{id}	Remove um empréstimo
 **************************************************************
 
 📌 Padrões Implementados
+
 ✅ Clean Architecture → Código modular e bem estruturado, separando responsabilidades entre Domain, Application, Infrastructure e API.
 
 ✅ CQRS (Command & Query Responsibility Segregation) → Separação entre operações de leitura (Queries) e escrita (Commands) para melhor escalabilidade.
