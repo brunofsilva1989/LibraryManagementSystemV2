@@ -100,6 +100,8 @@ dotnet run --project LibraryManagementSystem.API
 A API estará disponível em:
 📌 https://localhost:5001/swagger/index.html
 
+***********************************************
+
 🎯 Endpoints Disponíveis
 
 🔹 UserController
@@ -114,6 +116,8 @@ PUT	/api/users/{id}	Atualiza um usuário
 
 DELETE	/api/users/{id}	Deleta um usuário
 
+***********************************************
+
 🔹 BookController
 Método	Rota	Descrição
 POST	/api/books	Adiciona um novo livro
@@ -125,6 +129,8 @@ GET	/api/books	Lista todos os livros
 PUT	/api/books/{id}	Atualiza um livro
 
 DELETE	/api/books/{id}	Deleta um livro
+
+***********************************************
 
 🔹 LoanController
 Método	Rota	Descrição
@@ -138,6 +144,8 @@ PUT	/api/loans/return/{id}	Finaliza um empréstimo (devolução)
 
 DELETE	/api/loans/{id}	Remove um empréstimo
 
+
+**************************************************************
 
 📌 Padrões Implementados
 
