@@ -2,9 +2,9 @@
 
 🚀 **Sistema de gerenciamento de biblioteca** desenvolvido com **.NET, ADO.NET, CQRS e Clean Architecture** - By Bruno Silva.
 
-![GitHub repo size](https://img.shields.io/github/repo-size/seu-usuario/seu-repositorio?style=for-the-badge)
-![GitHub last commit](https://img.shields.io/github/last-commit/seu-usuario/seu-repositorio?style=for-the-badge)
-![GitHub language count](https://img.shields.io/github/languages/count/seu-usuario/seu-repositorio?style=for-the-badge)
+![GitHub repo size](https://img.shields.io/github/repo-size/brunofsilva1989/seu-repositorio?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/brunofsilva1989/seu-repositorio?style=for-the-badge)
+![GitHub language count](https://img.shields.io/github/languages/count/brunofsilva1989/seu-repositorio?style=for-the-badge)
 
 ---
 
