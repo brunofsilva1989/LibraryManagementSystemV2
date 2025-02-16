@@ -68,21 +68,37 @@ Loans → Controle de empréstimos.
 🔹 Execute todas as procedures no SQL Server, dentro do LibraryDB:
 
 "SP_GET_BOOKS";
+
 "SP_GET_BOOK_BY_ID";
+
 "SP_UPDATE_BOOKS";
+
 "SP_CREATE_BOOKS";
+
 "SP_DELETE_BOOKS";
+
 "SP_CREATE_LOAN";
+
 "SP_DELETE_LOAN";
+
 "SP_UPDATE_LOAN";
+
 "SP_GET_LOAN_BY_USER";
+
 "SP_MARK_LOAN_LATE";
+
 "SP_RENEW_LOAN";
+
 "SP_RETURN_LOAN";
+
 "SP_GET_USERS";
+
 "SP_GET_USER_BY_ID";
+
 "SP_UPDATE_USER";
+
 "SP_CREATE_USER";
+
 "SP_DELETE_USER";
 
 ### **6️⃣ Rodando a API
