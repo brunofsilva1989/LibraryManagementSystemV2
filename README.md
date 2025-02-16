@@ -37,6 +37,7 @@ O projeto está configurado para acessar um banco de dados SQL Server, mas você
 }
 
 🔹 Altere SEU_SERVIDOR, SEU_USUARIO e SUA_SENHA conforme o seu ambiente.
+
 🔹 Se estiver rodando no SQL Server Express, use:
 
 ### **3️⃣ Criar o Banco de Dados
