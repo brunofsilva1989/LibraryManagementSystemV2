@@ -8,7 +8,7 @@ namespace LibraryManagementSystem.Application.DTOs
 {
     public class LoanDto
     {
-        public int Id { get; set; }
+        public int Id { get; set; }        
         public int IdUser { get; set; }
         public int IdBook { get; set; }
         public DateTime Loans { get; set; }

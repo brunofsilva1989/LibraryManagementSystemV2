@@ -1,10 +1,6 @@
-﻿using LibraryManagementSystem.Domain.Interfaces;
+﻿using LibraryManagementSystem.Application.DTOs;
+using LibraryManagementSystem.Domain.Interfaces;
 using LibraryManagementSystem.Domain.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Application.Commands
 {
@@ -17,9 +13,17 @@ namespace LibraryManagementSystem.Application.Commands
             _userRepository = userRepository;
         }
 
-        public void Execute(UserModel user) => _userRepository.CreateUser(user);
-
-        //sobrecarga para passar o id e model juntos
+        public void Execute(UsersDto userDto)
+        {
+            var userModel = new UserModel
+            {                
+                CPF = userDto.CPF,
+                Name = userDto.Name,
+                Email = userDto.Email,
+                Password = userDto.Password
+            };
+        }
+        
         public void Execute(int id, UserModel user)
         {
             user.Id = id;

@@ -1,10 +1,6 @@
-﻿using LibraryManagementSystem.Domain.Interfaces;
+﻿using LibraryManagementSystem.Application.DTOs;
+using LibraryManagementSystem.Domain.Interfaces;
 using LibraryManagementSystem.Domain.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Application.Commands
 {
@@ -16,7 +12,19 @@ namespace LibraryManagementSystem.Application.Commands
             _bookRepository = bookRepository;
         }
 
-        public void Execute(BookModel bookModel) => _bookRepository.UpdateBook(bookModel);
+        public void Execute(BookDto bookDto)
+        {
+            var bookModel = new BookModel
+            {
+                Id = bookDto.Id,
+                Title = bookDto.Title,
+                Author = bookDto.Author,
+                ISBN = bookDto.ISBN,
+                YearPublication = bookDto.YearPublication
+            };
+
+            _bookRepository.UpdateBook(bookModel);
+        }
 
     }
 }

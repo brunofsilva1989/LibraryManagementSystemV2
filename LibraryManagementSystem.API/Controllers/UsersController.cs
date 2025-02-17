@@ -1,4 +1,5 @@
 ﻿using LibraryManagementSystem.Application.Commands;
+using LibraryManagementSystem.Application.DTOs;
 using LibraryManagementSystem.Application.Queries;
 using LibraryManagementSystem.Domain.Exceptions;
 using LibraryManagementSystem.Domain.Model;
@@ -72,11 +73,11 @@ namespace LibraryManagementSystem.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("create-user")]
-        public IActionResult CreateUser(UserModel user)
+        public IActionResult CreateUser([FromBody] UsersDto userDto)
         {
-            _createUserCommand.Execute(user);
+            _createUserCommand.Execute(userDto);
 
-            return Ok(user);
+            return Ok(userDto);
         }
 
         /// <summary>
@@ -84,17 +85,24 @@ namespace LibraryManagementSystem.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPut("update-user/{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] UserModel user) 
+        public IActionResult UpdateUser(int id, [FromBody] UsersDto userDto) 
         {
-            //nõa tera mais use case só o padrao cqrs
-            var existingUser = _getUsersQuery.Execute(id);
-            if (existingUser == null)
+            if(userDto == null)
             {
-                return NotFound("User not found!");
+                return BadRequest("Invalid user data");
             }
 
-            _createUserCommand.Execute(id, user);
-            return Ok("user Updated successfully!");
+            var user = new UserModel
+            {
+                Id = id,
+                CPF = userDto.CPF,
+                Name = userDto.Name,
+                Email = userDto.Email,
+                Password = userDto.Password
+            };
+
+            _updateUserCommand.Execute(user);
+            return Ok("User updated successfully!");
         }
 
         /// <summary>
@@ -104,6 +112,11 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpDelete("delete-user")]
         public IActionResult DeleteUser(int id) 
         {
+            if (id <= 0)
+            {
+                return BadRequest("Invalid user Id");
+            }
+
             _deleteUserCommand.Execute(id);
           
             return Ok("User deleted!");

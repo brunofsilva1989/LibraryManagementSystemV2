@@ -36,8 +36,13 @@ namespace LibraryManagementSystem.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("create-loan")]
-        public IActionResult CreateLoan(int userId, int bookId)
+        public IActionResult CreateLoan([FromBody] int userId, int bookId)
         {
+            if (userId <= 0 || bookId <= 0)
+            {
+                return BadRequest("Invalid user or book Id");
+            }
+
             _createLoanCommand.Execute(userId, bookId);
             
             return Ok("Loan created successfully!");
@@ -66,9 +71,14 @@ namespace LibraryManagementSystem.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("return-loan/{loanId}")]
-        public IActionResult ReturnLoan(LoanDto loanDto)
+        public IActionResult ReturnLoan([FromBody] LoanDto loan)
         {
-            _returnLoanCommand.Execute(loanDto.Id);
+            if (loan.Id == null)
+            {
+                return NotFound("Loan not found!");
+            }
+
+            _returnLoanCommand.Execute(loan.Id);
             return Ok("Loan returned successfully!");
         }
 
@@ -78,14 +88,19 @@ namespace LibraryManagementSystem.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost("renew-loan/{loanId}")]
-        public IActionResult RenewLoan(int id)
+        public IActionResult RenewLoan([FromBody] int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest("Invalid loan Id");
+            }
+
             _renewLoanCommand.Execute(id);
             return Ok("Loan renewed successfully!");
         }
 
         [HttpPost("update-loan")]
-        public IActionResult UpdateLoan(LoanDto loanDto)
+        public IActionResult UpdateLoan([FromBody] LoanDto loanDto)
         {
             var loanModel = new LoanModel
             {
@@ -96,6 +111,11 @@ namespace LibraryManagementSystem.API.Controllers
                 ReturnDate = loanDto.ReturnDate,
                 Status = (LoanStatus)loanDto.Status
             };
+
+            if (loanModel == null)
+            {
+                return NotFound("Loan not found!");
+            }
 
             _updateLoanCommand.Execute(loanModel);
 
@@ -114,7 +134,7 @@ namespace LibraryManagementSystem.API.Controllers
         /// <returns></returns>
         [HttpPost("mark-late")]
         public IActionResult MarkLoanLate()
-        {
+        {          
             _markLoanLateCommand.Execute();
             return Ok("Loan marked as late successfully!");
         }
@@ -127,6 +147,11 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpDelete("delete-loan/{loanId}")]
         public IActionResult DeleteLoan(int loanId)
         {
+            if (loanId == null)
+            {
+                throw new Exception("Loan  not found");
+            }
+
             _deleteLoanCommand.Execute(loanId);
             return Ok("Loan deleted successfully!");
         }
