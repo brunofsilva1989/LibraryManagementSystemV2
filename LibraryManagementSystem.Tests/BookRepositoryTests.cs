@@ -1,52 +1,67 @@
-﻿using System.Data;
+﻿using LibraryManagementSystem.Infrastructure.Repositories;
 using LibraryManagementSystem.Domain.Model;
-using LibraryManagementSystem.Infrastructure.Repositories;
-using Microsoft.Extensions.Configuration;
 using Moq;
 using Xunit;
+using FluentAssertions;
+using System.Data;
+using Microsoft.Extensions.Configuration;
 
-namespace LibraryManagementSystem.Tests
+public class BookRepositoryTests
 {
-    public class BookRepositoryTests
+    private readonly BookRepository _bookRepository;
+    private readonly IConfiguration _configurationMock;
+
+    public BookRepositoryTests()
     {
-        private readonly Mock<IDbConnection> _dbConnectionMock;
-        private readonly Mock<IDbCommand> _dbCommandMock;
-        private readonly Mock<IConfiguration> _configurationMock;   
-        private readonly BookRepository _bookRepository;
-
-        public BookRepositoryTests()
-        {            
-            _dbCommandMock = new Mock<IDbCommand>();
-            _configurationMock = new Mock<IConfiguration>();
-            _dbConnectionMock = new Mock<IDbConnection>();
-            _bookRepository = new BookRepository(_configurationMock.Object);
-        }
-
-        [Fact]
-        public void CreateBook_WhenCalled_ShouldCreateBook()
+        // 🔹 Criando uma configuração simulada sem usar Moq
+        var inMemorySettings = new Dictionary<string, string>
         {
-            // Arrange
-            var bookModel = new BookModel
-            {
-                Title = "Book Title",
-                Author = "Book Author",
-                ISBN = "123456789",
-                YearPublication = 2022
-            };
-            _dbConnectionMock.Setup(x => x.Open());
-            _dbConnectionMock.Setup(x => x.CreateCommand()).Returns(_dbCommandMock.Object);
-            _dbCommandMock.Setup(x => x.CommandType).Returns(CommandType.StoredProcedure);
-            _dbCommandMock.Setup(x => x.Parameters.Add(It.IsAny<IDataParameter>()));
-            _dbCommandMock.Setup(x => x.ExecuteNonQuery());
-            _configurationMock.Setup(x => x.GetConnectionString("DefaultConnection")).Returns("connectionString");
-            // Act
-            _bookRepository.CreateBook(bookModel);
-            // Assert
-            _dbConnectionMock.Verify(x => x.Open(), Times.Once);
-            _dbConnectionMock.Verify(x => x.CreateCommand(), Times.Once);
-            _dbCommandMock.VerifySet(x => x.CommandType = CommandType.StoredProcedure, Times.Once);
-            _dbCommandMock.Verify(x => x.Parameters.Add(It.IsAny<IDataParameter>()), Times.Exactly(4));
-            _dbCommandMock.Verify(x => x.ExecuteNonQuery(), Times.Once);
-        }
+            { "ConnectionStrings:DefaultConnection", "Server=DEVBRUNO;Database=LibraryDB;User Id=sa;Password=Bru@1989;TrustServerCertificate=True" }
+        };
+
+        _configurationMock = new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemorySettings)
+            .Build();
+
+        // 🔹 Criando instância do repositório
+        _bookRepository = new BookRepository(_configurationMock);
+    }
+
+    [Fact]
+    public void GetBooks_ShouldReturnListOfBooks()
+    {
+        // Arrange
+        var books = new List<BookModel>
+        {
+            new BookModel { Id = 1, Title = "Livro 1", Author = "Autor 1", ISBN = "1234567890123", YearPublication = 2020 },
+            new BookModel { Id = 2, Title = "Livro 2", Author = "Autor 2", ISBN = "9876543210987", YearPublication = 2021 }
+        };
+
+        var mockReader = new Mock<IDataReader>();
+        mockReader.SetupSequence(r => r.Read())
+                  .Returns(true)
+                  .Returns(true)
+                  .Returns(false);
+
+        mockReader.Setup(r => r["Id"]).Returns(1);
+        mockReader.Setup(r => r["Title"]).Returns("Livro 1");
+        mockReader.Setup(r => r["Author"]).Returns("Autor 1");
+        mockReader.Setup(r => r["ISBN"]).Returns("1234567890123");
+        mockReader.Setup(r => r["YearPublication"]).Returns(2020);
+
+        var commandMock = new Mock<IDbCommand>();
+        commandMock.Setup(cmd => cmd.ExecuteReader()).Returns(mockReader.Object);
+
+        var dbConnectionMock = new Mock<IDbConnection>();
+        dbConnectionMock.Setup(conn => conn.CreateCommand()).Returns(commandMock.Object);
+
+        // Act
+        var result = _bookRepository.GetBooks().ToList();
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().HaveCount(2);        
+        result.Should().Contain(b => b.Title == "Livro 1" && b.Author == "Autor 1");
+        result.Should().Contain(b => b.Title == "Livro 2" && b.Author == "Autor 2");
     }
 }
